@@ -1,0 +1,114 @@
+const quizQuestions = [
+    {
+      question: "What is the capital of India?",
+      options: ["Delhi", "Kolkata", "Bihar", "New Delhi"],
+      correctAnswer: "New Delhi"
+    },
+    {
+      question: "Which planet is known as the Red Planet?",
+      options: ["Venus", "Mars", "Jupiter", "Saturn"],
+      correctAnswer: "Mars"
+    },
+    {
+      question: "What is the chemical symbol for gold?",
+      options: ["Au", "Ag", "Cu", "Fe"],
+      correctAnswer: "Au"
+    },
+    {
+        question: "Which country launches the world's first fully-fledged 5G mobile networks?",
+        options: ["India", "Japan", "China", "South Korea"],
+        correctAnswer: "South korea"
+    },
+    {
+        question: "Which Island was notified as Island Protection Zone (IPZ) 2019 by Union Ministry of Environment, Forest and Climate Change recently?",
+        options:["Andaman and Nicobar Island", "Kurumgad Island", "World Island", " Khanderi Island"],
+        correctAnswer: "Andaman and Nicobar Island"
+    }
+  ];
+  
+  let currentQuestionIndex = 0;
+  let score = 0;
+  let timeLeft = 30;
+  let timerInterval;
+  
+  function startQuiz() {
+    document.getElementById("start-button").style.display = "none";
+    displayQuestion();
+    startTimer();
+  }
+  
+  function displayQuestion() {
+    const currentQuestion = quizQuestions[currentQuestionIndex];
+    const questionText = document.getElementById("question-text");
+    const answerButtons = document.getElementById("answer-buttons");
+  
+    questionText.innerHTML = "";
+    answerButtons.innerHTML = "";
+  
+    questionText.innerHTML = currentQuestion.question;
+  
+    currentQuestion.options.forEach(option => {
+      const button = document.createElement("button");
+      button.innerText = option;
+      button.classList.add("answer-button");
+      answerButtons.appendChild(button);
+  
+      // Add click event listener to check the answer
+      button.addEventListener("click", function() {
+        checkAnswer(option);
+      });
+    });
+  }
+  
+  // Function to check the selected answer
+  function checkAnswer(selectedOption) {
+    const currentQuestion = quizQuestions[currentQuestionIndex];
+  
+    // Check if the selected answer is correct
+    if (selectedOption === currentQuestion.correctAnswer) {
+      score++;
+    }
+  
+    // Move to the next question or end the quiz if all questions are answered
+    currentQuestionIndex++;
+  
+    if (currentQuestionIndex < quizQuestions.length) {
+      displayQuestion();
+    } else {
+      endQuiz();
+    }
+  }
+  
+  // Function to start the timer
+  function startTimer() {
+    timerInterval = setInterval(function() {
+      timeLeft--;
+  
+      // Update the timer text
+      document.getElementById("timer").textContent = timeLeft;
+  
+      // End the quiz if time runs out
+      if (timeLeft <= 0) {
+        endQuiz();
+      }
+    }, 1000);
+  }
+  
+  // Function to end the quiz
+  function endQuiz() {
+    // Stop the timer
+    clearInterval(timerInterval);
+  
+    // Calculate the score percentage
+    const scorePercentage = (score / quizQuestions.length) * 100;
+  
+    // Display the final score
+    const questionContainer = document.getElementById("question-container");
+    questionContainer.innerHTML = `
+      <h2>Quiz Completed!</h2>
+      <p>Your Score: ${score} out of ${quizQuestions.length}</p>
+      <p>Score Percentage: ${scorePercentage}%</p>
+    `;
+  }
+  
+  document.getElementById("start-button").addEventListener("click", startQuiz);
